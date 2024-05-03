@@ -1,0 +1,527 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST lotto_history_pov.*/_delete_by_query
+{
+  "query": {
+    "match": {
+      "buyer_uuid": "4e43640c08a809f52dd95b55d4f2304d154421185268bf4b6a5dd7c381fee291"
+    }
+  }
+}
+
+POST lotto_history_pov.3010-08-16/_update/90124484265
+{
+  "doc": {
+    "reward_status": "waiting_for_update"
+  }
+}
+
+POST lotto_history_pov.3010-08-16/_update/90124484261
+{
+  "doc": {
+    "lotto_status": "transfered",
+    "is_win": 0,
+    "payment_id": 0
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "id": {
+              "gt": 90124484261
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "ids": {
+            "values": [90124484261]
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "scanner_uuid": {
+              "value": "4e43640c08a809f52dd95b55d4f2304d154421185268bf4b6a5dd7c381fee291"
+            }
+          }
+        },
+        {
+          "range": {
+            "lotto_price_due": {
+              "gte": "3010-06-16",
+              "lte": "3010-08-16"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "group_by_date": {
+      "date_histogram": {
+        "field": "lotto_price_due",
+        "calendar_interval": "1d",
+        "format": "yyyy-MM-dd"
+      },
+      "aggs": {
+        "rewards_win": {
+          "sum": {
+            "script": {
+              "source": """
+                (doc['lotto_status.keyword'].value == 'transfered' || 
+                doc['lotto_status.keyword'].value == 'leftovers' ||
+                doc['lotto_status.keyword'].value == 'ban') && 
+                doc['payment_id'].value == 0 && 
+                doc['is_win'].value == 1 ? 1 : 0
+              """,
+              "lang": "painless"
+            }
+          }
+        },
+        "status_initial": {
+          "sum": {
+            "script": {
+              "source": "doc['lotto_status.keyword'].value == 'initial' ? 1 : 0",
+              "lang": "painless"
+            }
+          }
+        },
+        "filter_status_initial": {
+          "bucket_selector": {
+            "buckets_path": {
+              "statusInitial": "status_initial"
+            },
+            "script": {
+              "source": """params.statusInitial == 0.0"""
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+GET lotto_history_pov.*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "ids": {
+            "values": ["90124484136"]
+          }
+        },
+        {
+          "term": {
+            "buyer_uuid": {
+              "value": "4e43640c08a809f52dd95b55d4f2304d154421185268bf4b6a5dd7c381fee291"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST lotto_history_pov.3010-08-16/_update/90124484136
+{
+  "doc": {
+    "win_desc" : [ 
+      {
+        "description" : "รางวัลเลขท้าย 2 ตัว",
+        "reward" : "2000.00",
+        "is_firstreward" : false
+      }
+    ],
+    "reward_status" : "verified"
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "id": {
+              "value": "90124484136"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_search
+{
+  "query": {
+    "terms": {
+      "_id": ["90124484136"]
+    }
+  }
+}
+
+GET lotto_history_pov.3010-08-16/_doc/90124484109
+
+GET lotto_history_pov.*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "tags": [1,2]
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET  lotto_history_pov.*/_search
+GET lotto_history_poc.*/_search
+GET lotto_history_poc.3010-06-16/_doc/90124449782
+GET lotto_history_poc.3010-06-16/_mapping
+POST lotto_history_poc.3010-06-16/_update/90124449782
+{
+  "doc": {
+    "lotto_dt1" : 999,
+    "lotto_dt2": 777,
+    "lotto_set": "1",
+    "reward_status": "asasas"
+  }
+}
+
+
+POST lotto_history_poc.3010-06-16/_update_by_query
+{
+  "query": {
+    "terms": {
+      "_id": ["90124449782"]
+    }
+  },
+  "script": {
+    "source": """
+      ctx._source.lotto_dt1 = 1000;
+      ctx._source.lotto_dt2 = 2000;
+    """,
+    "lang": "painless"
+  }
+}
+
+GET lotto_history.*/_search
+GET _cat/indices?v
+
+GET lotto_history.30100201/_search
+
+DELETE lotto_history.30100502
+GET lotto_history.30100502/_search
+GET lotto_history.30100502/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "buyer_uuid": {
+              "value": "97a136db1d2bf20a6588fbf5702e48c292c5bd517e1b7da840d9c76915fd39f1"
+            }
+          }
+        },
+        {
+          "terms": {
+            "lotto_status": [
+              "sold","transfered","suspend","ban"
+            ]
+          }
+        },
+        {
+          "range": {
+            "lotto_price_due": {
+              "gte": "3008-05-02",
+              "lt": "3010-06-01"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "lotto_price_due": {
+        "order": "desc"
+      }
+    },
+    {
+      "_script": {
+        "type": "number",
+        "script": {
+          "lang": "painless", 
+          "source": """
+            def lottoType = doc['lotto_type.keyword'].value;
+            if (lottoType == '01') return 1;
+            else if (lottoType == '02') return 2;
+            else if (lottoType == 'P80') return 3;
+            else if (lottoType == 'M') return 4;
+            else return 0;
+          """
+        },
+        "order": "asc"
+      }
+    },
+    {
+      "lotto_number.keyword": {
+          "order": "asc"
+      }
+    },
+    {
+      "lotto_round.keyword": {
+          "order": "asc"
+      }
+    },
+    {
+      "lotto_set.keyword": {
+          "order": "asc"
+      }
+    }
+  ]
+}
+GET lotto_history.30100502/_mapping
+PUT lotto_history.30100503
+{
+  "mappings" : {
+    "properties" : {
+      "buyer_uuid" : {
+        "type" : "keyword"
+      },
+      "create_at" : {
+        "type" : "date",
+        "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "create_by" : {
+        "type" : "keyword"
+      },
+      "id" : {
+        "type" : "keyword"
+      },
+      "is_win" : {
+        "type" : "boolean"
+      },
+      "lotto_bc_hash" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_bc_ref" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_dt1" : {
+        "type" : "keyword"
+      },
+      "lotto_dt2" : {
+        "type" : "keyword"
+      },
+      "lotto_dt3" : {
+        "type" : "keyword"
+      },
+      "lotto_dt4" : {
+        "type" : "keyword"
+      },
+      "lotto_dt5" : {
+        "type" : "keyword"
+      },
+      "lotto_dt6" : {
+        "type" : "keyword"
+      },
+      "lotto_item" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_number" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_price" : {
+        "type" : "integer"
+      },
+      "lotto_price_due" : {
+        "type" : "date",
+        "format" : "yyyy-MM-dd"
+      },
+      "lotto_round" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_set" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_status" : {
+        "type" : "keyword"
+      },
+      "lotto_type" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_url" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "lotto_uuid" : {
+        "type" : "keyword"
+      },
+      "lotto_year" : {
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
+      },
+      "payment_id" : {
+        "type" : "long"
+      },
+      "purchase_datetime" : {
+        "type" : "date",
+        "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "reward_status" : {
+        "type" : "keyword"
+      },
+      "scanner_uuid" : {
+        "type" : "keyword"
+      },
+      "tags" : {
+        "type" : "keyword"
+      },
+      "update_at" : {
+        "type" : "date",
+        "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "update_by" : {
+        "type" : "keyword"
+      },
+      "win_desc" : {
+        "type" : "nested",
+        "properties" : {
+          "description" : {
+            "type" : "text",
+            "fields" : {
+              "keyword" : {
+                "type" : "keyword",
+                "ignore_above" : 256
+              }
+            }
+          },
+          "is_firstreward" : {
+            "type" : "boolean"
+          },
+          "reward" : {
+            "type" : "double"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET lotto_history.30100503/_search
+PUT lotto_history.30100503/_doc/1
+{
+  "id" : 90124426481,
+  "lotto_number" : "379099",
+  "lotto_round" : "57",
+  "lotto_set" : "00",
+  "lotto_year" : "53",
+  "lotto_item" : "3790",
+  "lotto_price_due" : "3010-04-16",
+  "lotto_price" : 80,
+  "scanner_uuid" : "97a136db1d2bf20a6588fbf5702e48c292c5bd517e1b7da840d9c76915fd39f1",
+  "buyer_uuid" : "97a136db1d2bf20a6588fbf5702e48c292c5bd517e1b7da840d9c76915fd39f1",
+  "lotto_url" : "3010-05-02-01.jpg",
+  "lotto_bc_ref" : "1804896",
+  "lotto_bc_hash" : "MEQCIENDdTF6ruTwhYqWwtDx+mb/qsUb/AOyOhLIcffNNsVOAiBZ4TQq6Ta0Yb+HPk5wTDt5klj2GoW34ZQjzSZwe+Zaag==",
+  "lotto_type" : "01",
+  "lotto_status" : "transfered",
+  "create_at" : "2023-12-28 15:12:39",
+  "create_by" : "",
+  "update_at" : "2023-12-28 15:12:39",
+  "update_by" : "",
+  "payment_id" : 0,
+  "lotto_uuid" : "535700379099",
+  "tags" : "",
+  "is_win" : false,
+  "win_desc" : [ ]
+}
