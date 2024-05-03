@@ -1,7 +1,7 @@
 package errorr
 
 type errorr interface {
-	Error() error
+	Error(er error) error
 }
 
 type Error struct{}

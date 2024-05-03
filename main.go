@@ -105,12 +105,20 @@ func main() {
 
 func initDatabaseReplica(ctx context.Context) *gorm.DB {
 
+	// dsn := fmt.Sprintf(
+	// 	"%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local",
+	// 	"lotto",
+	// 	"P@ssw0rd",
+	// 	"(34.126.127.110:3306)",
+	// 	"ktb_glo",
+	// )
+
 	dsn := fmt.Sprintf(
 		"%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local",
-		"lotto",
-		"P@ssw0rd",
-		"(34.126.127.110:3306)",
-		"ktb_glo",
+		"admin",
+		"root",
+		"(127.0.0.1:3306)",
+		"go-migrate-to-els-db",
 	)
 	slog.Info("Connecting to database replica")
 
