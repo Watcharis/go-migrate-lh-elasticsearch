@@ -1,0 +1,7 @@
+https://gist.github.com/slok/33dad1d0d0bae07977e6d32bcc010188
+
+https://pkg.go.dev/runtime/pprof
+
+https://pkg.go.dev/net/http/pprof#hdr-Parameters
+
+https://developers.ascendcorp.com/%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C-golang-%E0%B8%94%E0%B9%89%E0%B8%A7%E0%B8%A2-go-profiling-f97a1fba15ab
