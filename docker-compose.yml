@@ -24,7 +24,7 @@ services:
       - elasticsearch
 
   redis:
-    image: redislabs/redismod
+    image: redis
     ports:
       - 6379:6379
 
@@ -41,6 +41,8 @@ services:
       MYSQL_DATABASE: go-migrate-to-els-db
     ports:
       - 3306:3306
+    volumes:
+     - ./mysql-data:/var/lib/mysql
 
   
 
