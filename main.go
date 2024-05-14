@@ -105,14 +105,6 @@ func main() {
 
 func initDatabaseReplica(ctx context.Context) *gorm.DB {
 
-	// dsn := fmt.Sprintf(
-	// 	"%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local",
-	// 	"lotto",
-	// 	"P@ssw0rd",
-	// 	"(34.126.127.110:3306)",
-	// 	"ktb_glo",
-	// )
-
 	dsn := fmt.Sprintf(
 		"%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local",
 		"admin",
@@ -153,7 +145,7 @@ func initDatabaseReplica(ctx context.Context) *gorm.DB {
 func initElasticsearch() *elasticsearch.Client {
 	// log.Println("Connecting to elasticsearch merchant")
 	slog.Info("Connecting to elasticsearch merchant")
-	// host := strings.Split("http://10.249.128.5:9200,http://10.249.128.6:9200,http://10.249.128.8:9200", ",")
+
 	es7, err := elasticsearch.NewClient(elasticsearch.Config{
 		Addresses: []string{"http://localhost:9200"},
 		Username:  "lottousr",
