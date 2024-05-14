@@ -18,7 +18,6 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 data/
-data/*
 mysql-data/
 
 # Go workspace file
